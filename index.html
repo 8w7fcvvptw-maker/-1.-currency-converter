@@ -536,6 +536,11 @@ async function convert() {
     $time.textContent = '';
     return;
   }
+  if (amount > 999_999_999_999_999) {
+    $result.innerHTML = '<span class="result-error">Сумма слишком большая</span>';
+    $time.textContent = '';
+    return;
+  }
 
   $btn.disabled = true;
   $result.innerHTML = '<div class="loader"></div>';
@@ -578,6 +583,7 @@ $swap.addEventListener('click', () => {
   csTo.value = tmp;
   csFrom.updateTrigger();
   csTo.updateTrigger();
+  convert();
 });
 
 loadCurrencies();
