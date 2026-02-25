@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Конвертер валют</title>
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+    :root {
+      --bg: #f4f1ec;
+      --surface: #ffffff;
+      --text: #2c3e50;
+      --text-secondary: #7f8c8d;
+      --accent: #5b7a8a;
+      --accent-hover: #4a6877;
+      --border: #ddd8d0;
+      --input-bg: #faf9f7;
+      --shadow: rgba(44,62,80,.06);
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .card {
+      background: var(--surface);
+      border-radius: 20px;
+      padding: 40px 36px 36px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 8px 32px var(--shadow), 0 1px 3px var(--shadow);
+    }
+
+    h1 {
+      font-size: 1.35rem;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 32px;
+      letter-spacing: -.02em;
+      color: var(--text);
+    }
+
+    label {
+      display: block;
+      font-size: .78rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: 6px;
+    }
+
+    .field { margin-bottom: 20px; }
+
+    input, select {
+      width: 100%;
+      padding: 12px 14px;
+      font-size: 1rem;
+      font-family: inherit;
+      color: var(--text);
+      background: var(--input-bg);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(91,122,138,.12);
+    }
+
+    input[type="number"] {
+      -moz-appearance: textfield;
+    }
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+    }
+
+    .currency-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-end;
+    }
+
+    .currency-row .field { flex: 1; margin-bottom: 20px; }
+
+    .swap-btn {
+      flex-shrink: 0;
+      width: 40px;
+      height: 40px;
+      margin-bottom: 24px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      background: var(--input-bg);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background .2s, border-color .2s;
+      color: var(--accent);
+    }
+    .swap-btn:hover {
+      background: var(--bg);
+      border-color: var(--accent);
+    }
+    .swap-btn svg { width: 18px; height: 18px; }
+
+    select {
+      cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237f8c8d' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+    }
+
+    .convert-btn {
+      width: 100%;
+      padding: 14px;
+      font-size: 1rem;
+      font-weight: 600;
+      font-family: inherit;
+      color: #fff;
+      background: var(--accent);
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background .2s, transform .1s;
+      margin-top: 4px;
+    }
+    .convert-btn:hover { background: var(--accent-hover); }
+    .convert-btn:active { transform: scale(.985); }
+    .convert-btn:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+    }
+
+    .result {
+      margin-top: 24px;
+      text-align: center;
+      min-height: 62px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .result-value {
+      font-size: 1.65rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -.02em;
+    }
+
+    .result-rate {
+      font-size: .82rem;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    .result-error {
+      font-size: .88rem;
+      color: #c0392b;
+    }
+
+    .loader {
+      width: 24px;
+      height: 24px;
+      border: 2.5px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .update-time {
+      text-align: center;
+      font-size: .72rem;
+      color: var(--text-secondary);
+      margin-top: 8px;
+    }
+
+    @media (max-width: 480px) {
+      .card { padding: 28px 20px 24px; }
+      .currency-row { gap: 8px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <h1>Конвертер валют</h1>
+
+  <div class="field">
+    <label for="amount">Сумма</label>
+    <input type="number" id="amount" value="1" min="0" step="any" autocomplete="off">
+  </div>
+
+  <div class="currency-row">
+    <div class="field">
+      <label for="from">Из</label>
+      <select id="from"></select>
+    </div>
+
+    <button class="swap-btn" id="swap" title="Поменять местами">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M7 16l-4-4 4-4"/><path d="M21 16l-4-4 4-4" transform="scale(-1,1) translate(-24,0)"/>
+        <line x1="3" y1="12" x2="21" y2="12"/>
+      </svg>
+    </button>
+
+    <div class="field">
+      <label for="to">В</label>
+      <select id="to"></select>
+    </div>
+  </div>
+
+  <button class="convert-btn" id="convert">Конвертировать</button>
+
+  <div class="result" id="result"></div>
+  <div class="update-time" id="updateTime"></div>
+</div>
+
+<script>
+const POPULAR = ['USD','EUR','RUB','GBP','CNY','JPY','TRY','KZT','BYN','UAH','GEL','AED','CHF','CAD','AUD','PLN','INR','BRL','KRW','THB'];
+
+const NAMES = {
+  USD:'Доллар США',EUR:'Евро',RUB:'Российский рубль',GBP:'Фунт стерлингов',
+  CNY:'Юань',JPY:'Японская иена',TRY:'Турецкая лира',KZT:'Казахский тенге',
+  BYN:'Белорусский рубль',UAH:'Гривна',GEL:'Грузинский лари',AED:'Дирхам ОАЭ',
+  CHF:'Швейцарский франк',CAD:'Канадский доллар',AUD:'Австралийский доллар',
+  PLN:'Польский злотый',INR:'Индийская рупия',BRL:'Бразильский реал',
+  KRW:'Южнокорейская вона',THB:'Тайский бат'
+};
+
+const $amount = document.getElementById('amount');
+const $from   = document.getElementById('from');
+const $to     = document.getElementById('to');
+const $btn    = document.getElementById('convert');
+const $result = document.getElementById('result');
+const $time   = document.getElementById('updateTime');
+const $swap   = document.getElementById('swap');
+
+function populateSelects(allCodes) {
+  const popular = POPULAR.filter(c => allCodes.includes(c));
+  const rest = allCodes.filter(c => !POPULAR.includes(c)).sort();
+
+  [$from, $to].forEach(sel => {
+    sel.innerHTML = '';
+    const grp1 = document.createElement('optgroup');
+    grp1.label = 'Популярные';
+    popular.forEach(code => {
+      const o = document.createElement('option');
+      o.value = code;
+      o.textContent = NAMES[code] ? `${code} — ${NAMES[code]}` : code;
+      grp1.appendChild(o);
+    });
+    sel.appendChild(grp1);
+
+    if (rest.length) {
+      const grp2 = document.createElement('optgroup');
+      grp2.label = 'Все валюты';
+      rest.forEach(code => {
+        const o = document.createElement('option');
+        o.value = code;
+        o.textContent = code;
+        grp2.appendChild(o);
+      });
+      sel.appendChild(grp2);
+    }
+  });
+
+  $from.value = 'USD';
+  $to.value = 'RUB';
+}
+
+async function loadCurrencies() {
+  try {
+    const resp = await fetch('https://open.er-api.com/v6/latest/USD');
+    const data = await resp.json();
+    if (data.result === 'success') {
+      populateSelects(Object.keys(data.rates));
+    }
+  } catch {
+    populateSelects(POPULAR);
+  }
+}
+
+function formatNumber(n) {
+  if (n >= 1) return n.toLocaleString('ru-RU', { maximumFractionDigits: 2 });
+  const s = n.toPrecision(4);
+  return parseFloat(s).toLocaleString('ru-RU', { maximumFractionDigits: 6 });
+}
+
+async function convert() {
+  const amount = parseFloat($amount.value);
+  if (!amount || amount < 0) {
+    $result.innerHTML = '<span class="result-error">Введите корректную сумму</span>';
+    $time.textContent = '';
+    return;
+  }
+
+  $btn.disabled = true;
+  $result.innerHTML = '<div class="loader"></div>';
+  $time.textContent = '';
+
+  try {
+    const base = $from.value;
+    const target = $to.value;
+    const resp = await fetch(`https://open.er-api.com/v6/latest/${base}`);
+    const data = await resp.json();
+
+    if (data.result !== 'success') throw new Error('API error');
+
+    const rate = data.rates[target];
+    const converted = amount * rate;
+
+    $result.innerHTML =
+      `<span class="result-value">${formatNumber(converted)} ${target}</span>` +
+      `<span class="result-rate">1 ${base} = ${formatNumber(rate)} ${target}</span>`;
+
+    const updated = new Date(data.time_last_update_utc);
+    $time.textContent = `Обновлено: ${updated.toLocaleString('ru-RU', { day:'numeric', month:'long', hour:'2-digit', minute:'2-digit' })}`;
+  } catch {
+    $result.innerHTML = '<span class="result-error">Не удалось получить курс. Попробуйте позже.</span>';
+  } finally {
+    $btn.disabled = false;
+  }
+}
+
+$btn.addEventListener('click', convert);
+$amount.addEventListener('keydown', e => { if (e.key === 'Enter') convert(); });
+$swap.addEventListener('click', () => {
+  const tmp = $from.value;
+  $from.value = $to.value;
+  $to.value = tmp;
+});
+
+loadCurrencies();
+</script>
+
+</body>
+</html>
