@@ -8,15 +8,15 @@
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 
     :root {
-      --bg: #f4f1ec;
-      --surface: #ffffff;
-      --text: #2c3e50;
-      --text-secondary: #7f8c8d;
-      --accent: #5b7a8a;
-      --accent-hover: #4a6877;
-      --border: #ddd8d0;
-      --input-bg: #faf9f7;
-      --shadow: rgba(44,62,80,.06);
+      --bg: #1a1f2e;
+      --surface: #232a3b;
+      --text: #e4e6eb;
+      --text-secondary: #8b92a5;
+      --accent: #5b8a7a;
+      --accent-hover: #4a7a69;
+      --border: #343b4f;
+      --input-bg: #2a3148;
+      --shadow: rgba(0,0,0,.25);
     }
 
     body {
@@ -27,61 +27,67 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 24px;
+      padding: 0;
+      margin: 0;
     }
 
     .card {
       background: var(--surface);
-      border-radius: 20px;
-      padding: 40px 36px 36px;
+      border-radius: 0;
+      padding: 0 48px;
       width: 100%;
-      max-width: 420px;
-      box-shadow: 0 8px 32px var(--shadow), 0 1px 3px var(--shadow);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: none;
+    }
+
+    .card-inner {
+      width: 100%;
+      max-width: 520px;
     }
 
     h1 {
-      font-size: 1.35rem;
-      font-weight: 600;
+      font-size: 1.7rem;
+      font-weight: 700;
       text-align: center;
-      margin-bottom: 32px;
-      letter-spacing: -.02em;
+      margin-bottom: 40px;
+      letter-spacing: .01em;
       color: var(--text);
     }
 
     label {
       display: block;
-      font-size: .78rem;
-      font-weight: 500;
-      color: var(--text-secondary);
-      text-transform: uppercase;
-      letter-spacing: .06em;
-      margin-bottom: 6px;
+      font-size: .92rem;
+      font-weight: 600;
+      color: var(--text);
+      text-align: center;
+      letter-spacing: .04em;
+      margin-bottom: 8px;
     }
 
-    .field { margin-bottom: 20px; }
+    .field { margin-bottom: 22px; }
 
-    input, select {
+    input[type="number"] {
       width: 100%;
-      padding: 12px 14px;
-      font-size: 1rem;
+      padding: 14px 16px;
+      font-size: 1.05rem;
       font-family: inherit;
       color: var(--text);
       background: var(--input-bg);
       border: 1.5px solid var(--border);
-      border-radius: 10px;
+      border-radius: 12px;
       outline: none;
       transition: border-color .2s, box-shadow .2s;
       appearance: none;
       -webkit-appearance: none;
-    }
-
-    input:focus, select:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(91,122,138,.12);
-    }
-
-    input[type="number"] {
       -moz-appearance: textfield;
+    }
+    input[type="number"]:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(91,138,122,.18);
     }
     input::-webkit-outer-spin-button,
     input::-webkit-inner-spin-button {
@@ -94,50 +100,162 @@
       align-items: flex-end;
     }
 
-    .currency-row .field { flex: 1; margin-bottom: 20px; }
+    .currency-row .field { flex: 1; margin-bottom: 22px; }
 
     .swap-btn {
       flex-shrink: 0;
-      width: 40px;
-      height: 40px;
-      margin-bottom: 24px;
+      width: 46px;
+      height: 46px;
+      margin-bottom: 26px;
       border: 1.5px solid var(--border);
-      border-radius: 10px;
+      border-radius: 12px;
       background: var(--input-bg);
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: background .2s, border-color .2s;
+      transition: background .2s, border-color .2s, transform .2s;
       color: var(--accent);
     }
     .swap-btn:hover {
       background: var(--bg);
       border-color: var(--accent);
+      transform: rotate(180deg);
     }
-    .swap-btn svg { width: 18px; height: 18px; }
+    .swap-btn svg { width: 22px; height: 22px; }
 
-    select {
+    /* Custom searchable select */
+    .custom-select {
+      position: relative;
+      width: 100%;
+    }
+
+    .select-trigger {
+      width: 100%;
+      padding: 14px 40px 14px 16px;
+      font-size: 1.05rem;
+      font-family: inherit;
+      color: var(--text);
+      background: var(--input-bg);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
       cursor: pointer;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237f8c8d' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 14px center;
-      padding-right: 36px;
+      transition: border-color .2s, box-shadow .2s;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      user-select: none;
+      position: relative;
+    }
+    .select-trigger::after {
+      content: '';
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 5px solid var(--text-secondary);
+      transition: transform .2s;
+    }
+    .custom-select.open .select-trigger::after {
+      transform: translateY(-50%) rotate(180deg);
+    }
+    .select-trigger:hover,
+    .custom-select.open .select-trigger {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(91,138,122,.18);
+    }
+
+    .select-dropdown {
+      display: none;
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      right: 0;
+      background: var(--input-bg);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      z-index: 100;
+      box-shadow: 0 12px 32px rgba(0,0,0,.35);
+      overflow: hidden;
+    }
+    .custom-select.open .select-dropdown {
+      display: block;
+    }
+
+    .select-search {
+      width: 100%;
+      padding: 12px 14px;
+      font-size: .95rem;
+      font-family: inherit;
+      color: var(--text);
+      background: var(--surface);
+      border: none;
+      border-bottom: 1px solid var(--border);
+      outline: none;
+    }
+    .select-search::placeholder {
+      color: var(--text-secondary);
+    }
+
+    .select-options {
+      max-height: 220px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+    }
+    .select-options::-webkit-scrollbar { width: 6px; }
+    .select-options::-webkit-scrollbar-track { background: transparent; }
+    .select-options::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 3px;
+    }
+
+    .select-group-label {
+      padding: 8px 14px 4px;
+      font-size: .72rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+
+    .select-option {
+      padding: 10px 14px;
+      font-size: .95rem;
+      color: var(--text);
+      cursor: pointer;
+      transition: background .15s;
+    }
+    .select-option:hover {
+      background: rgba(91,138,122,.15);
+    }
+    .select-option.active {
+      background: rgba(91,138,122,.25);
+    }
+    .select-no-results {
+      padding: 14px;
+      font-size: .88rem;
+      color: var(--text-secondary);
+      text-align: center;
     }
 
     .convert-btn {
       width: 100%;
-      padding: 14px;
-      font-size: 1rem;
+      padding: 16px;
+      font-size: 1.05rem;
       font-weight: 600;
       font-family: inherit;
       color: #fff;
       background: var(--accent);
       border: none;
-      border-radius: 10px;
+      border-radius: 12px;
       cursor: pointer;
       transition: background .2s, transform .1s;
-      margin-top: 4px;
+      margin-top: 8px;
     }
     .convert-btn:hover { background: var(--accent-hover); }
     .convert-btn:active { transform: scale(.985); }
@@ -147,9 +265,9 @@
     }
 
     .result {
-      margin-top: 24px;
+      margin-top: 28px;
       text-align: center;
-      min-height: 62px;
+      min-height: 68px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -157,7 +275,7 @@
     }
 
     .result-value {
-      font-size: 1.65rem;
+      font-size: 1.8rem;
       font-weight: 700;
       color: var(--text);
       letter-spacing: -.02em;
@@ -171,7 +289,7 @@
 
     .result-error {
       font-size: .88rem;
-      color: #c0392b;
+      color: #e07066;
     }
 
     .loader {
@@ -192,44 +310,62 @@
     }
 
     @media (max-width: 480px) {
-      .card { padding: 28px 20px 24px; }
-      .currency-row { gap: 8px; }
+      .card { padding: 0 20px; }
+      .currency-row { flex-direction: column; gap: 0; }
+      .swap-btn { margin: 0 auto 16px; transform: rotate(90deg); }
+      .swap-btn:hover { transform: rotate(270deg); }
     }
   </style>
 </head>
 <body>
 
 <div class="card">
-  <h1>Конвертер валют</h1>
-
-  <div class="field">
-    <label for="amount">Сумма</label>
-    <input type="number" id="amount" value="1" min="0" step="any" autocomplete="off">
-  </div>
-
-  <div class="currency-row">
-    <div class="field">
-      <label for="from">Из</label>
-      <select id="from"></select>
-    </div>
-
-    <button class="swap-btn" id="swap" title="Поменять местами">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M7 16l-4-4 4-4"/><path d="M21 16l-4-4 4-4" transform="scale(-1,1) translate(-24,0)"/>
-        <line x1="3" y1="12" x2="21" y2="12"/>
-      </svg>
-    </button>
+  <div class="card-inner">
+    <h1>Конвертер валют</h1>
 
     <div class="field">
-      <label for="to">В</label>
-      <select id="to"></select>
+      <label for="amount">Сумма</label>
+      <input type="number" id="amount" value="1" min="0" step="any" autocomplete="off">
     </div>
+
+    <div class="currency-row">
+      <div class="field">
+        <label>Из</label>
+        <div class="custom-select" id="cs-from">
+          <div class="select-trigger" tabindex="0"></div>
+          <div class="select-dropdown">
+            <input type="text" class="select-search" placeholder="Поиск валюты..." autocomplete="off">
+            <div class="select-options"></div>
+          </div>
+        </div>
+      </div>
+
+      <button class="swap-btn" id="swap" title="Поменять местами">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="17 1 21 5 17 9"/>
+          <line x1="3" y1="5" x2="21" y2="5"/>
+          <polyline points="7 15 3 19 7 23"/>
+          <line x1="21" y1="19" x2="3" y2="19"/>
+        </svg>
+      </button>
+
+      <div class="field">
+        <label>В</label>
+        <div class="custom-select" id="cs-to">
+          <div class="select-trigger" tabindex="0"></div>
+          <div class="select-dropdown">
+            <input type="text" class="select-search" placeholder="Поиск валюты..." autocomplete="off">
+            <div class="select-options"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="convert-btn" id="convert">Конвертировать</button>
+
+    <div class="result" id="result"></div>
+    <div class="update-time" id="updateTime"></div>
   </div>
-
-  <button class="convert-btn" id="convert">Конвертировать</button>
-
-  <div class="result" id="result"></div>
-  <div class="update-time" id="updateTime"></div>
 </div>
 
 <script>
@@ -244,45 +380,131 @@ const NAMES = {
   KRW:'Южнокорейская вона',THB:'Тайский бат'
 };
 
+let allCurrencyCodes = [];
+
+class SearchableSelect {
+  constructor(container, defaultValue) {
+    this.container = container;
+    this.value = defaultValue || '';
+    this.trigger = container.querySelector('.select-trigger');
+    this.dropdown = container.querySelector('.select-dropdown');
+    this.searchInput = container.querySelector('.select-search');
+    this.optionsContainer = container.querySelector('.select-options');
+    this.items = [];
+    this.isOpen = false;
+
+    this.trigger.addEventListener('click', () => this.toggle());
+    this.searchInput.addEventListener('input', () => this.filter());
+    this.searchInput.addEventListener('keydown', e => {
+      if (e.key === 'Escape') this.close();
+    });
+
+    document.addEventListener('click', e => {
+      if (!this.container.contains(e.target)) this.close();
+    });
+  }
+
+  setItems(popular, rest) {
+    this.items = [];
+    popular.forEach(code => {
+      const label = NAMES[code] ? `${code} — ${NAMES[code]}` : code;
+      this.items.push({ code, label, group: 'popular' });
+    });
+    rest.forEach(code => {
+      this.items.push({ code, label: code, group: 'other' });
+    });
+    this.render();
+    this.updateTrigger();
+  }
+
+  render(query = '') {
+    const q = query.toLowerCase();
+    const filtered = q
+      ? this.items.filter(item =>
+          item.code.toLowerCase().includes(q) ||
+          (NAMES[item.code] || '').toLowerCase().includes(q)
+        )
+      : this.items;
+
+    let html = '';
+    if (filtered.length === 0) {
+      html = '<div class="select-no-results">Ничего не найдено</div>';
+    } else {
+      const popularItems = filtered.filter(i => i.group === 'popular');
+      const otherItems = filtered.filter(i => i.group === 'other');
+
+      if (popularItems.length) {
+        html += '<div class="select-group-label">Популярные</div>';
+        popularItems.forEach(item => {
+          const active = item.code === this.value ? ' active' : '';
+          html += `<div class="select-option${active}" data-value="${item.code}">${item.label}</div>`;
+        });
+      }
+      if (otherItems.length) {
+        html += '<div class="select-group-label">Все валюты</div>';
+        otherItems.forEach(item => {
+          const active = item.code === this.value ? ' active' : '';
+          html += `<div class="select-option${active}" data-value="${item.code}">${item.label}</div>`;
+        });
+      }
+    }
+
+    this.optionsContainer.innerHTML = html;
+
+    this.optionsContainer.querySelectorAll('.select-option').forEach(el => {
+      el.addEventListener('click', () => {
+        this.value = el.dataset.value;
+        this.updateTrigger();
+        this.close();
+      });
+    });
+  }
+
+  filter() {
+    this.render(this.searchInput.value);
+  }
+
+  updateTrigger() {
+    const item = this.items.find(i => i.code === this.value);
+    this.trigger.textContent = item ? item.label : this.value;
+  }
+
+  toggle() {
+    this.isOpen ? this.close() : this.open();
+  }
+
+  open() {
+    this.isOpen = true;
+    this.container.classList.add('open');
+    this.searchInput.value = '';
+    this.render();
+    setTimeout(() => this.searchInput.focus(), 10);
+  }
+
+  close() {
+    this.isOpen = false;
+    this.container.classList.remove('open');
+    this.searchInput.value = '';
+  }
+}
+
+const csFrom = new SearchableSelect(document.getElementById('cs-from'), 'USD');
+const csTo   = new SearchableSelect(document.getElementById('cs-to'), 'RUB');
+
 const $amount = document.getElementById('amount');
-const $from   = document.getElementById('from');
-const $to     = document.getElementById('to');
 const $btn    = document.getElementById('convert');
 const $result = document.getElementById('result');
 const $time   = document.getElementById('updateTime');
 const $swap   = document.getElementById('swap');
 
 function populateSelects(allCodes) {
+  allCurrencyCodes = allCodes;
   const popular = POPULAR.filter(c => allCodes.includes(c));
   const rest = allCodes.filter(c => !POPULAR.includes(c)).sort();
-
-  [$from, $to].forEach(sel => {
-    sel.innerHTML = '';
-    const grp1 = document.createElement('optgroup');
-    grp1.label = 'Популярные';
-    popular.forEach(code => {
-      const o = document.createElement('option');
-      o.value = code;
-      o.textContent = NAMES[code] ? `${code} — ${NAMES[code]}` : code;
-      grp1.appendChild(o);
-    });
-    sel.appendChild(grp1);
-
-    if (rest.length) {
-      const grp2 = document.createElement('optgroup');
-      grp2.label = 'Все валюты';
-      rest.forEach(code => {
-        const o = document.createElement('option');
-        o.value = code;
-        o.textContent = code;
-        grp2.appendChild(o);
-      });
-      sel.appendChild(grp2);
-    }
-  });
-
-  $from.value = 'USD';
-  $to.value = 'RUB';
+  csFrom.setItems(popular, rest);
+  csTo.setItems(popular, rest);
+  csFrom.value = 'USD'; csFrom.updateTrigger();
+  csTo.value = 'RUB';   csTo.updateTrigger();
 }
 
 async function loadCurrencies() {
@@ -303,6 +525,10 @@ function formatNumber(n) {
   return parseFloat(s).toLocaleString('ru-RU', { maximumFractionDigits: 6 });
 }
 
+function toMSK(utcDate) {
+  return new Date(utcDate.getTime() + 3 * 60 * 60 * 1000);
+}
+
 async function convert() {
   const amount = parseFloat($amount.value);
   if (!amount || amount < 0) {
@@ -316,8 +542,8 @@ async function convert() {
   $time.textContent = '';
 
   try {
-    const base = $from.value;
-    const target = $to.value;
+    const base = csFrom.value;
+    const target = csTo.value;
     const resp = await fetch(`https://open.er-api.com/v6/latest/${base}`);
     const data = await resp.json();
 
@@ -330,8 +556,13 @@ async function convert() {
       `<span class="result-value">${formatNumber(converted)} ${target}</span>` +
       `<span class="result-rate">1 ${base} = ${formatNumber(rate)} ${target}</span>`;
 
-    const updated = new Date(data.time_last_update_utc);
-    $time.textContent = `Обновлено: ${updated.toLocaleString('ru-RU', { day:'numeric', month:'long', hour:'2-digit', minute:'2-digit' })}`;
+    const msk = toMSK(new Date(data.time_last_update_utc));
+    const day = msk.getUTCDate();
+    const months = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+    const month = months[msk.getUTCMonth()];
+    const hours = String(msk.getUTCHours()).padStart(2, '0');
+    const mins  = String(msk.getUTCMinutes()).padStart(2, '0');
+    $time.textContent = `Обновлено: ${day} ${month}, ${hours}:${mins} МСК`;
   } catch {
     $result.innerHTML = '<span class="result-error">Не удалось получить курс. Попробуйте позже.</span>';
   } finally {
@@ -342,9 +573,11 @@ async function convert() {
 $btn.addEventListener('click', convert);
 $amount.addEventListener('keydown', e => { if (e.key === 'Enter') convert(); });
 $swap.addEventListener('click', () => {
-  const tmp = $from.value;
-  $from.value = $to.value;
-  $to.value = tmp;
+  const tmp = csFrom.value;
+  csFrom.value = csTo.value;
+  csTo.value = tmp;
+  csFrom.updateTrigger();
+  csTo.updateTrigger();
 });
 
 loadCurrencies();
